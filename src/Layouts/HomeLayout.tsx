@@ -8,20 +8,22 @@ type Props = {
 };
 
 const HomeLayout = (props: Props) => {
-	const { getStuff, data } = useFoobarStore();
+	const { getCurrentPlaylist, getPlaylist, playlistState, playlist } = useFoobarStore();
 
-	useEffect(getStuff, [getStuff]);
+	useEffect(getCurrentPlaylist, [getCurrentPlaylist]);
+	// useEffect(getCurrentPlaylist, [getCurrentPlaylist]);
 
 	return (
 		<Page title="Home">
 			<h1>Home</h1>
-			{!data ? (
+			{!playlistState ? (
 				<>Loading...</>
-			) : data ? (
+			) : (
 				<>
-					<div className="stuff">{JSON.stringify(data)}</div>
+					{playlistState ? <div className="stuff">{JSON.stringify(playlistState)}</div> : null}
+					{playlist ? <div className="stuff">{JSON.stringify(playlist)}</div> : null}
 				</>
-			) : null}
+			)}
 		</Page>
 	);
 };

@@ -13,7 +13,7 @@ export type FoobarPlaylistTrack = {
 	title: string;
 };
 
-export type FoobarState = {
+export type Foobar2000AppState = {
 	playlist: FoobarPlaylistTrack[];
 	playlists: FoobarPlaylistInfo[];
 	playbackOrder: number;
@@ -21,12 +21,12 @@ export type FoobarState = {
 	volumedb: number;
 	SAC: string;
 	SAQ: string;
-	isPlaying: number;
-	isPaused: number;
-	isEnqueueing: number;
+	isPlaying: boolean;
+	isPaused: boolean;
+	isEnqueueing: boolean;
 	playingItem: number;
 	focusedItem: number;
-	prevplayedItem: number;
+	prevplayedItem: number | null;
 	itemPlayingPos: number;
 	itemPlayingLen: number;
 	playlistPage: number;
@@ -37,8 +37,8 @@ export type FoobarState = {
 	playlistPlayingItemsCount: number;
 	playlistTotalTime: string;
 	queueTotalTime: string;
-	isUndoAvailable: number;
-	isRedoAvailable: number;
+	isUndoAvailable: boolean;
+	isRedoAvailable: boolean;
 	helper1: string;
 	helper2: string;
 	helper3: string;
