@@ -18,18 +18,18 @@ const defaultTrack: FoobarPlaylistTrack = {
 
 const PlayingView = ({ state }: PlayingProps) => {
 	const { albumArt, isPlaying, playingItem, playlist } = state;
-	const track: FoobarPlaylistTrack = playingItem >= 0 ? playlist[playingItem] : defaultTrack;
+	const track: FoobarPlaylistTrack = isPlaying && playingItem >= 0 ? playlist[playingItem] : defaultTrack;
 	return (
 		<Styles>
 			<Image src={isPlaying ? albumArt : "/img/nocover.png"} alt="art" />
-			<p>Title: {track.title}</p>
-			<p>Artist: {track.artist}</p>
-			<p>Album: {track.album}</p>
-			<p>Year: {track.date}</p>
-			<p>Length: {track.length}</p>
-			<p>Info: {state.helper3}</p>
-			<hr />
-			{/* <div className="stuff">{JSON.stringify(playlist)}</div> */}
+			<div className="track-info">
+				<p>{track.title}</p>
+				<p>{track.artist}</p>
+				<p>{track.album}</p>
+				<p>{track.date}</p>
+				<p>{track.length}</p>
+				<p>{state.helper3}</p>
+			</div>
 		</Styles>
 	);
 };
@@ -44,8 +44,18 @@ const Image = styled.img`
 	height: auto;
 	margin-left: auto;
 	margin-right: auto;
+	border: 2px solid #555555;
 `;
 
 const Styles = styled.div`
 	display: block;
+
+	p {
+		margin: 0;
+		padding-bottom: 0.25rem;
+	}
+
+	.track-info {
+		padding-top: 1.5rem;
+	}
 `;

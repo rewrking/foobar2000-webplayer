@@ -26,17 +26,24 @@ const HomeLayout = (props: Props) => {
 
 	return (
 		<Page title="Home">
-			<h1>Home</h1>
-			<hr />
-			{/* {!!error ? (
-				<>Error... {error}</>
-			) : loading ? (
-				<>Loading...</>
-			) : ( */}
-			<>{!!state ? <PlayingView state={state} /> : null}</>
-			{/* )} */}
+			<Styles>
+				<h1>Home</h1>
+				<hr />
+				<>{!!state ? <PlayingView state={state} /> : null}</>
+				<hr />
+				{/* <div className="stuff">{JSON.stringify(state)}</div> */}
+			</Styles>
 		</Page>
 	);
 };
+
+const Styles = styled.div`
+	hr {
+		color: darkmagenta;
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+		max-width: 30rem;
+	}
+`;
 
 export { HomeLayout };
