@@ -13,7 +13,7 @@ export type FoobarPlaylistTrack = {
 	title: string;
 };
 
-export type Foobar2000AppState = {
+export type Foobar2000StateResult = {
 	playlist: FoobarPlaylistTrack[];
 	playlists: FoobarPlaylistInfo[];
 	playbackOrder: number;
@@ -26,7 +26,7 @@ export type Foobar2000AppState = {
 	isEnqueueing: boolean;
 	playingItem: number;
 	focusedItem: number;
-	prevplayedItem: number | null;
+	prevplayedItem: number;
 	itemPlayingPos: number;
 	itemPlayingLen: number;
 	playlistPage: number;

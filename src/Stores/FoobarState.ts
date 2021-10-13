@@ -1,6 +1,6 @@
 import { BaseState, Action, Optional } from "@andrew-r-king/react-kitchen";
-import { Foobar2000AppState, FoobarPlaylistInfo, FoobarPlaylistTrack } from "Data/Foobar2000";
-import { UrlParser } from "Utils";
+import { Foobar2000StateResult, FoobarPlaylistInfo, FoobarPlaylistTrack } from "Data/Foobar2000";
+import { foobarApi } from "Api/FoobarApi";
 
 type ExpectedPlaylistInfo = {
 	name: string;
@@ -24,32 +24,29 @@ export enum FoobarCommands {
 // Note: The foobar2000 server has no CORS controls, so we just needs to fetch it as raw js
 
 class FoobarState extends BaseState {
-	private url: string = "http://localhost:8888/webplayer";
-
-	playlistState: Optional<Foobar2000AppState> = null;
-	playlist: Optional<FoobarPlaylistInfo> = null;
-
-	private fetch = (url: string, onLoad: (data: any) => void) => {
-		console.log(url);
-		var s = document.createElement("script");
-		s.setAttribute("src", url);
-		s.onload = () => {
-			onLoad(window["foobarData"]);
-			document.body.removeChild(s);
-		};
-		document.body.appendChild(s);
-	};
+	private url: string = "http://localhost:8888";
 
 	private parseSpecialChars = (data: string): string => {
 		data = data.replaceAll(/&#39;/g, "'");
 		return data;
 	};
 
+	state: Optional<Foobar2000StateResult> = null;
+
 	@Action
-	private setPlaylistState = (data: any) => {
-		this.playlistState = {
+	private setPlaylistState = (data: any): Optional<Foobar2000StateResult> => {
+		if (!data) return null;
+
+		let state = {
 			...data,
-			prevplayedItem: (data.prevplayedItem as string).length > 0 ? parseInt(data.prevplayedItem, 10) : null,
+			albumArt: data.albumArt.length > 0 ? `${this.url}${data.albumArt}` : data.albumArt,
+			playingItem: (data.playingItem as string).length > 0 ? parseInt(data.playingItem, 10) : -1,
+			prevplayedItem: (data.prevplayedItem as string).length > 0 ? parseInt(data.prevplayedItem, 10) : -1,
+			playlistPlaying: (data.playlistPlaying as string).length > 0 ? parseInt(data.playlistPlaying, 10) : -1,
+			playlistPlayingItemsCount:
+				(data.playlistPlayingItemsCount as string).length > 0
+					? parseInt(data.playlistPlayingItemsCount, 10)
+					: -1,
 			isPlaying: !!data.isPlaying,
 			isPaused: !!data.isPaused,
 			isEnqueueing: !!data.isEnqueueing,
@@ -71,28 +68,65 @@ class FoobarState extends BaseState {
 				} as FoobarPlaylistInfo;
 			}),
 		};
-		this.playlist = this.playlistState!.playlists[this.playlistState!.playlistPlaying];
-		console.log(this.playlistState);
+
+		// console.log(state);
+		return state;
 	};
 
-	private getPlaylistState = (cmd: Optional<FoobarCommands> = null, param1: Optional<string | number> = null) => {
-		let url: UrlParser = new UrlParser(this.url);
-
-		if (cmd !== null) url.addParam("cmd", cmd);
-		if (param1 !== null) url.addParam("param1", param1);
-
-		url.addParam("param3", "js/state.js");
-
-		this.fetch(url.toString(), this.setPlaylistState);
+	getCurrentPlaylist = async () => {
+		try {
+			const result = await foobarApi.getPlaylistState();
+			return this.setPlaylistState(result);
+		} catch (err) {
+			throw err;
+		}
 	};
 
-	getCurrentPlaylist = () => {
-		this.getPlaylistState();
+	getPlaylist = async (index: number) => {
+		try {
+			// Note: this literally switches the playlist too
+			const result = await foobarApi.getPlaylistState(FoobarCommands.SwitchPlaylist, index);
+			return this.setPlaylistState(result);
+		} catch (err) {
+			throw err;
+		}
 	};
 
-	getPlaylist = (index: number) => {
-		// Note: this literally switches the playlist too
-		this.getPlaylistState(FoobarCommands.SwitchPlaylist, index);
+	timer: number = -1;
+	private interval: Optional<NodeJS.Timeout> = null;
+
+	@Action
+	private setTimerValue = (val: number) => {
+		if (val > 1000) {
+			this.timer = 0;
+		} else {
+			this.timer = val;
+		}
+	};
+
+	startTimer = async (interval: number = 2) => {
+		try {
+			this.setTimerValue(0);
+			this.state = await this.getCurrentPlaylist();
+			this.interval = setInterval(async () => {
+				try {
+					this.setTimerValue(this.timer + 1);
+					this.state = await this.getCurrentPlaylist();
+				} catch (err) {
+					throw err;
+				}
+			}, interval * 1000);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	endTimer = () => {
+		this.setTimerValue(-1);
+		if (this.interval) {
+			clearInterval(this.interval);
+			this.interval = null;
+		}
 	};
 }
 

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
+import styled from "styled-components";
 
-import { Page } from "Components";
+import { Page, PlayingView } from "Components";
 import { useFoobarStore } from "Stores";
 
 type Props = {
@@ -8,22 +9,32 @@ type Props = {
 };
 
 const HomeLayout = (props: Props) => {
-	const { getCurrentPlaylist, getPlaylist, playlistState, playlist } = useFoobarStore();
+	const { state, getCurrentPlaylist, getPlaylist, timer, startTimer, endTimer } = useFoobarStore();
 
-	useEffect(getCurrentPlaylist, [getCurrentPlaylist]);
-	// useEffect(getCurrentPlaylist, [getCurrentPlaylist]);
+	// const [state, loading, error, cache] = useAsyncEffect(getCurrentPlaylist, [getCurrentPlaylist, timer]);
+
+	// useEffect(() => cache.remove, [cache]);
+
+	useEffect(() => {
+		startTimer();
+
+		return () => {
+			// cache.remove();
+			endTimer();
+		};
+	}, [startTimer, endTimer]);
 
 	return (
 		<Page title="Home">
 			<h1>Home</h1>
-			{!playlistState ? (
+			<hr />
+			{/* {!!error ? (
+				<>Error... {error}</>
+			) : loading ? (
 				<>Loading...</>
-			) : (
-				<>
-					{playlistState ? <div className="stuff">{JSON.stringify(playlistState)}</div> : null}
-					{playlist ? <div className="stuff">{JSON.stringify(playlist)}</div> : null}
-				</>
-			)}
+			) : ( */}
+			<>{!!state ? <PlayingView state={state} /> : null}</>
+			{/* )} */}
 		</Page>
 	);
 };

@@ -12,8 +12,16 @@ export class UrlParser {
 		this.baseUrl = url;
 	};
 
+	getBaseUrl = (): string => {
+		return this.baseUrl;
+	};
+
 	addParam = (key: string, value: string | number) => {
 		this.params.push(`${key}=${value}`);
+	};
+
+	getParams = (): string => {
+		return this.params.join("&");
 	};
 
 	toString = (): string => {

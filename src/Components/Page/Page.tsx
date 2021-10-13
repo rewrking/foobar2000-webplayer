@@ -25,18 +25,19 @@ export { Page };
 const Styles = styled.div`
 	display: block;
 	position: absolute;
-	left: auto;
-	right: auto;
+	min-height: 100vh;
 	top: 0;
-	bottom: 0;
-	padding: 2rem 0;
-	width: 76rem;
-	color: #333;
+	right: 0;
+	bottom: auto;
+	left: 0;
+	background-color: #222222;
+	color: #fafafa;
 	z-index: 1;
 `;
 
 const Main = styled.div`
 	display: block;
-	position: relative;
+	max-width: 60rem;
+	margin: 0 auto;
 	z-index: 1;
 `;
