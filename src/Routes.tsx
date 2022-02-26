@@ -1,4 +1,4 @@
-import { makeRoutes, RouteProps } from "@andrew-r-king/react-kitchen";
+import { makeRoutes, RouteProps } from "@rewrking/react-kitchen";
 
 import {
 	HomeLayout,

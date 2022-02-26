@@ -1,4 +1,4 @@
-import { BaseApi, Optional } from "@andrew-r-king/react-kitchen";
+import { BaseApi, Optional } from "@rewrking/react-kitchen";
 import { Foobar2000StateResult } from "Data";
 import { FoobarCommands } from "Stores/FoobarState";
 import { UrlParser } from "Utils";

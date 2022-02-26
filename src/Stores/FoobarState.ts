@@ -1,4 +1,4 @@
-import { BaseState, Action, Optional } from "@andrew-r-king/react-kitchen";
+import { BaseState, Action, Optional } from "@rewrking/react-kitchen";
 import { Foobar2000StateResult, FoobarPlaylistInfo, FoobarPlaylistTrack } from "Data/Foobar2000";
 import { foobarApi } from "Api/FoobarApi";
 

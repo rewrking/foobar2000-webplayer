@@ -2,7 +2,7 @@
 	"name": "foobar2000-webplayer",
 	"version": "0.1.0",
 	"private": true,
-	"homepage": "https://andrew-r-king.github.io/foobar2000-webplayer",
+	"homepage": "https://rewrking.github.io/foobar2000-webplayer",
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build"
@@ -16,7 +16,7 @@
 		"Utils": "./src/Utils"
 	},
 	"dependencies": {
-		"@andrew-r-king/react-kitchen": "0.1.36",
+		"@rewrking/react-kitchen": "0.1.42",
 		"normalize.css": "8.0.1",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
